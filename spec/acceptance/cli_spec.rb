@@ -26,6 +26,10 @@ describe "Executing the remote_key CLI" do
         it "should contain the remote command" do
           all_output.should include(@ssh)
         end
+
+        it "should contain a listing for the 'tmp/aruba' directory" do
+          all_output.should match(/tmp\/aruba$/)
+        end
       end
     end
   end
