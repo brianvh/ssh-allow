@@ -4,10 +4,11 @@ describe "Executing the remote_key CLI" do
   context "GIVEN: a path-limited 'ls' config file" do
     before(:each) do
       @file = 'test.rkey'
+      @dir_path = File.expand_path(current_dir + '/../')
       @allow = %(
       allow('ls', '/bin/ls') do
         opts '-ld'
-        args '/a/complex/path/.*'
+        args "#{@dir_path}/.*"
       end
       ).gsub(/^ {6}/, '')
       write_file(@file, @allow)
@@ -15,7 +16,7 @@ describe "Executing the remote_key CLI" do
 
     context "WHEN: we run 'remote_key guard --echo' with a valid path" do
       before(:each) do
-        @ssh = 'ls -ld /a/complex/path/folder/*'
+        @ssh = "ls -ld #{@dir_path}/*"
         ENV['SSH_REMOTE_COMMAND'] = @ssh
         @cmd = "remote_key guard --config=#{current_dir}/#{@file} --echo"
         run_simple(@cmd)
