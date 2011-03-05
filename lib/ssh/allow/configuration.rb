@@ -12,6 +12,20 @@ module SSH::Allow
       error.nil?
     end
 
+    def allow(cmd)
+      rule = parse_command(cmd)
+      @rules << rule
+    end
+
+    def reset!
+      @rules = []
+    end
+
+    private
+
+      def parse_command(cmd)
+        SSH::Allow::Rule.parse(cmd)
+      end
   end
 
 end
