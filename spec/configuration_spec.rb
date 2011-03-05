@@ -75,4 +75,37 @@ describe SSH::Allow::Configuration do
     end
   end
 
+  context "with a config file with 2 valid rules" do
+    before(:each) do
+      @rule1 = mock_rule(:foo)
+      @rule2 = mock_rule(:bar)
+      @config.should_receive(:parse_command).twice.and_return(@rule1, @rule2)
+      @config.should_receive(:read_config).once.and_return(sample_rules)
+    end
+
+    context "#read" do
+      before(:each) do
+        @config.read('/my/fake/rules')
+      end
+
+      it "adds 2 rules" do
+        @config.rules.should == [@rule1, @rule2]
+      end
+    end
+  end
+
+  context "with a config file with 1 valid and 1 invalid rule" do
+    before(:each) do
+      @rule1 = mock_rule(:foo)
+      @rule2 = mock_rule(:bar, false)
+      @config.should_receive(:parse_command).twice.and_return(@rule1, @rule2)
+      @config.should_receive(:read_config).once.and_return(sample_rules)
+    end
+
+    context "#read" do
+      it "raises an error on the second rule" do
+        lambda { @config.read('/my/fake/rules') }.should raise_error(/Invalid rule: "bar"/)
+      end
+    end
+  end
 end
