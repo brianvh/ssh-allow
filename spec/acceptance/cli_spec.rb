@@ -35,7 +35,7 @@ describe "Executing the ssh-allow CLI" do
     context "WHEN: we run 'ssh-allow guard --echo' with an invalid path" do
       before(:each) do
         @ssh = ssh_command %(ls -ld /foo/bar/*)
-        run_simple(@cmd, false)
+        run_simple(@cmd)
       end
 
       context "THEN: the output of the run" do
@@ -44,5 +44,6 @@ describe "Executing the ssh-allow CLI" do
         end
       end
     end
+
   end
 end
