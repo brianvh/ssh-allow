@@ -1,6 +1,6 @@
 require 'acceptance/acceptance_helper'
 
-describe "Executing the remote_key CLI" do
+describe "Executing the ssh-allow CLI" do
   context "GIVEN: a path-limited 'ls' config file" do
     before(:each) do
       @file = 'test.rkey'
@@ -14,11 +14,11 @@ describe "Executing the remote_key CLI" do
       write_file(@file, @allow)
     end
 
-    context "WHEN: we run 'remote_key guard --echo' with a valid path" do
+    context "WHEN: we run 'ssh-allow guard --echo' with a valid path" do
       before(:each) do
         @ssh = "ls -ld #{@dir_path}/*"
         ENV['SSH_REMOTE_COMMAND'] = @ssh
-        @cmd = "remote_key guard --config=#{current_dir}/#{@file} --echo"
+        @cmd = "ssh-allow guard --config=#{current_dir}/#{@file} --echo"
         run_simple(@cmd)
       end
 

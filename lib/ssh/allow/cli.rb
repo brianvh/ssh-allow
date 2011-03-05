@@ -1,6 +1,6 @@
 require 'thor'
 
-module RemoteKey
+module SSH::Allow
 
   class CLI < Thor
 

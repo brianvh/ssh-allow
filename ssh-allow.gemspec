@@ -1,10 +1,10 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
-require "remote_key/version"
+require "ssh/allow/version"
 
 Gem::Specification.new do |s|
-  s.name        = "remote_key"
-  s.version     = RemoteKey::VERSION
+  s.name        = "ssh-allow"
+  s.version     = SSH::Allow::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Brian V. Hughes"]
   s.email       = ["brianvh@dartmouth.edu"]
@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.description = %(Process a YAML file that configures allowed commands an 
 SSH key-authenticated remote SSH connection can run.)
 
-  s.rubyforge_project = "remote_key"
+  s.rubyforge_project = "ssh-allow"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
