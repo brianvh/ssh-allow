@@ -16,6 +16,11 @@ module SSH::Allow
       add_rule parse_command(cmd, block)
     end
 
+    def allow!(cmd, &block)
+      rule = parse_command(cmd, block)
+      add_rule(rule) or raise(%(Invalid rule: "#{cmd}"))
+    end
+
     def reset!
       @rules.clear
     end
