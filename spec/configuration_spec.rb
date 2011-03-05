@@ -15,41 +15,64 @@ describe SSH::Allow::Configuration do
     end
   end
 
-  context "#allow -- on a valid rule" do
+  context "with a valid rule" do
     before(:each) do
       @rule = mock_rule(:invalid)
       @config.should_receive(:parse_command).once.and_return(@rule)
-      @config.allow(:rule)
     end
 
-    it "adds the rule" do
-      @config.rules.should == [@rule]
-    end
-
-    context "#reset!" do
+    context "#allow" do
       before(:each) do
-        @config.reset!
+        @config.allow(:rule)
       end
 
-      it "clears all rules" do
-        @config.rules.should be_empty
+      it "adds the rule" do
+        @config.rules.should == [@rule]
+      end
+
+      context "#reset!" do
+        before(:each) do
+          @config.reset!
+        end
+
+        it "clears all rules" do
+          @config.rules.should be_empty
+        end
+      end
+    end
+
+    context "#allow!" do
+      it "does not raise an error" do
+        lambda { @config.allow!(:rule) }.should_not raise_error
       end
     end
   end
 
-  context "#allow -- on an invalid rule" do
+  context "with an invalid rule" do
     before(:each) do
       rule = mock_rule(:invalid, false)
       @config.should_receive(:parse_command).once.and_return(rule)
-      @allow = @config.allow(:rule)
     end
 
-    it "returns false" do
-      @allow.should == false
+    context "#allow" do
+      before(:each) do
+        @allow = @config.allow(:rule)
+      end
+
+      it "returns false" do
+        @allow.should == false
+      end
+
+      it "does not add the rule" do
+        @config.rules.should be_empty
+      end
     end
 
-    it "does not add the rule" do
-      @config.rules.should be_empty
+    context "#allow!" do
+      it "raises an error" do
+        lambda { @config.allow!(:rule) }.should raise_error(/Invalid rule: "rule"/)
+      end
     end
   end
+
 end
