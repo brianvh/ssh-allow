@@ -1,3 +1,5 @@
+require 'singleton'
+
 module SSH::Allow
 
   class Configuration
@@ -34,6 +36,10 @@ module SSH::Allow
       def parse_command(cmd, &block)
         SSH::Allow::Rule.parse(cmd, block)
       end
+  end
+
+  class Configuration::Single < Configuration
+    include Singleton
   end
 
 end
