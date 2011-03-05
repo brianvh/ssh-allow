@@ -12,13 +12,12 @@ describe "Executing the ssh-allow CLI" do
       end
       ).gsub(/^ {6}/, '')
       write_file(@file, @allow)
+      @cmd = "ssh-allow guard --config=#{current_dir}/#{@file} --echo"
     end
 
     context "WHEN: we run 'ssh-allow guard --echo' with a valid path" do
       before(:each) do
-        @ssh = "ls -ld #{@dir_path}/*"
-        ENV['SSH_REMOTE_COMMAND'] = @ssh
-        @cmd = "ssh-allow guard --config=#{current_dir}/#{@file} --echo"
+        @ssh = ssh_command %(ls -ld #{@dir_path}/*)
         run_simple(@cmd)
       end
 
@@ -29,6 +28,19 @@ describe "Executing the ssh-allow CLI" do
 
         it "should contain a listing for the 'tmp/aruba' directory" do
           all_output.should match(/tmp\/aruba$/)
+        end
+      end
+    end
+
+    context "WHEN: we run 'ssh-allow guard --echo' with an invalid path" do
+      before(:each) do
+        @ssh = ssh_command %(ls -ld /foo/bar/*)
+        run_simple(@cmd, false)
+      end
+
+      context "THEN: the output of the run" do
+        it "should fail with an error" do
+          @last_exit_status.should_not == 0
         end
       end
     end
