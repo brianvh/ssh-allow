@@ -1,4 +1,5 @@
 require 'ssh/allow/cli'
+require 'ssh/allow/configuration'
 
 module SSH
   module Allow
