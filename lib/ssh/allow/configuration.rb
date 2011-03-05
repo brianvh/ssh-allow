@@ -14,7 +14,7 @@ module SSH::Allow
 
     def allow(cmd)
       rule = parse_command(cmd)
-      @rules << rule
+      @rules << rule if rule.valid?
     end
 
     def reset!
