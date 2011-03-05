@@ -19,6 +19,7 @@ describe SSH::Allow::Configuration do
   context "after adding a valid rule" do
     before(:each) do
       @rule = mock(:valid)
+      @rule.should_receive(:valid?).once.and_return(true)
       @config.should_receive(:parse_command).once.and_return(@rule)
       @config.allow(:rule)
     end
@@ -39,6 +40,19 @@ describe SSH::Allow::Configuration do
       it "has 0 rules" do
         @config.rules.should have(0).items
       end
+    end
+  end
+
+  context "after adding an invalid rule" do
+    before(:each) do
+      @rule = mock(:invalid)
+      @rule.should_receive(:valid?).once.and_return(false)
+      @config.should_receive(:parse_command).once.and_return(@rule)
+      @config.allow(:rule)
+    end
+
+    it "has 0 rules" do
+      @config.rules.should have(0).items
     end
   end
 end
