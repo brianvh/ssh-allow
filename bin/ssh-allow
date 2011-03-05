@@ -1,4 +1,4 @@
 #!/usr/bin/env ruby
 
-require 'ssh/allow/cli'
+require 'ssh/allow'
 SSH::Allow::CLI.start
