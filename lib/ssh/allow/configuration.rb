@@ -23,6 +23,10 @@ module SSH::Allow
       add_rule(rule) or raise(%(Invalid rule: "#{cmd}"))
     end
 
+    def read(path_to_config)
+      self.instance_eval(read_config(path_to_config))
+    end
+
     def reset!
       @rules.clear
     end
@@ -35,6 +39,10 @@ module SSH::Allow
 
       def parse_command(cmd, &block)
         SSH::Allow::Rule.parse(cmd, block)
+      end
+
+      def read_config(path_to_config)
+        IO.read(path_to_config)
       end
   end
 
