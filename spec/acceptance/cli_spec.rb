@@ -3,16 +3,16 @@ require 'acceptance/acceptance_helper'
 describe "Executing the ssh-allow CLI" do
   context "GIVEN: a path-limited 'ls' config file" do
     before(:each) do
-      @file = 'test.rkey'
+      @file = 'test.rules'
       @dir_path = File.expand_path(current_dir + '/../')
       @allow = %(
-      allow('ls', '/bin/ls') do
-        opts '-ld'
+      allow!("ls") do
+        opts "-ld"
         args "#{@dir_path}/.*"
       end
       ).gsub(/^ {6}/, '')
       write_file(@file, @allow)
-      @cmd = "ssh-allow guard --config=#{current_dir}/#{@file} --echo"
+      @cmd = "ssh-allow guard --rules=#{File.expand_path(current_dir)}/#{@file} --echo"
     end
 
     context "WHEN: we run 'ssh-allow guard --echo' with a valid path" do

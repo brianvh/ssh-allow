@@ -3,14 +3,14 @@ require 'thor'
 module SSH::Allow
   class CLI < Thor
 
-    desc  "guard --config | -c=<file> [--echo | -e]",
-          "Guard against the SSH_REMOTE_COMMAND, using rules in the --config file."
-    method_option :config, :type => :string, :aliases => '-c', :required => true,
-                  :default => File.expand_path("~/.rkey"), :banner => "Path to configuration file"
+    desc  "guard --rules | -r=<file> [--echo | -e]",
+          "Guard against the SSH_REMOTE_COMMAND, using rules in the --rules file."
+    method_option :rules, :type => :string, :aliases => '-r', :required => true,
+                  :default => File.expand_path("~/.ssh-rules"), :banner => "Path to rules file"
     method_option :echo, :type => :boolean, :default => false, :aliases => '-e',
                   :banner => "Echo the SSH_REMOTE_COMMAND."
     def guard
-      config.read(options[:config]) or fail(config.error)
+      rules.read(options[:rules])
       puts ssh_cmd if options[:echo]
       command = SSH::Allow.command(ssh_cmd)
       command.allowed? ? command.run : fail(command.error)
@@ -18,8 +18,8 @@ module SSH::Allow
 
     private
 
-      def config
-        SSH::Allow.configure
+      def rules
+        SSH::Allow.rules
       end
 
       def fail(msg='ssh-allow: Something went wrong.')
