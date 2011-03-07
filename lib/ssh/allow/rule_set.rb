@@ -28,7 +28,7 @@ module SSH::Allow
         rule.valid? ? @rules.push(rule) : false
       end
 
-      def get_rule(cmd, &block)
+      def get_rule(cmd, block)
         SSH::Allow::Rule.parse(cmd, block)
       end
 
