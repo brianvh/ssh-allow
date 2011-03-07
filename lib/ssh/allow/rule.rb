@@ -7,7 +7,7 @@ module SSH::Allow
     end
 
     def valid?
-      !(@command.empty? && @options.empty? && @args.empty?)
+      !(@command.empty? || @options.empty? || @args.empty?)
     end
 
   end
