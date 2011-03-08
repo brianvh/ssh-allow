@@ -10,11 +10,11 @@ module SSH::Allow
     end
 
     def allow(cmd, &block)
-      push get_rule(cmd, block)
+      push get_rule(:allow, cmd, block)
     end
 
     def allow!(cmd, &block)
-      rule = get_rule(cmd, block)
+      rule = get_rule(:allow, cmd, block)
       push(rule) or raise(%(Invalid rule: "#{cmd}"))
     end
 
@@ -25,11 +25,11 @@ module SSH::Allow
     private
 
       def push(rule)
-        rule.valid? ? @rules.push(rule) : false
+        rule ? @rules.push(rule) : false
       end
 
-      def get_rule(cmd, block)
-        SSH::Allow::Rule.parse(cmd, block)
+      def get_rule(type, cmd, block)
+        SSH::Allow::Rule.send(type, cmd, &block)
       end
 
       def read_rules(path_to_rules)
