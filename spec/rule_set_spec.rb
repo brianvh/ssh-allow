@@ -13,7 +13,7 @@ describe SSH::Allow::RuleSet do
 
   context "with a valid rule" do
     before(:each) do
-      @rule = mock_rule(:invalid)
+      @rule = mock(:rule)
       @rule_set.should_receive(:get_rule).once.and_return(@rule)
     end
 
@@ -36,8 +36,7 @@ describe SSH::Allow::RuleSet do
 
   context "with an invalid rule" do
     before(:each) do
-      rule = mock_rule(:invalid, false)
-      @rule_set.should_receive(:get_rule).once.and_return(rule)
+      @rule_set.should_receive(:get_rule).once.and_return(false)
     end
 
     context "#allow" do
@@ -63,8 +62,8 @@ describe SSH::Allow::RuleSet do
 
   context "with a config file with 2 valid rules" do
     before(:each) do
-      @rule1 = mock_rule(:foo)
-      @rule2 = mock_rule(:bar)
+      @rule1 = mock(:foo)
+      @rule2 = mock(:bar)
       @rule_set.should_receive(:get_rule).twice.and_return(@rule1, @rule2)
       @rule_set.should_receive(:read_rules).once.and_return(sample_rules)
     end
@@ -82,9 +81,8 @@ describe SSH::Allow::RuleSet do
 
   context "with a config file with 1 valid and 1 invalid rule" do
     before(:each) do
-      @rule1 = mock_rule(:foo)
-      @rule2 = mock_rule(:bar, false)
-      @rule_set.should_receive(:get_rule).twice.and_return(@rule1, @rule2)
+      @rule1 = mock(:foo)
+      @rule_set.should_receive(:get_rule).twice.and_return(@rule1, false)
       @rule_set.should_receive(:read_rules).once.and_return(sample_rules)
     end
 
