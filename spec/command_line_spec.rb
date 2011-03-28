@@ -31,7 +31,7 @@ describe "The CommandLine parser" do
     end
   end
 
-  context "with options" do
+  context "with just options" do
     before(:each) do
       @cmd = 'ls'
       @opts = []
@@ -119,12 +119,22 @@ describe "The CommandLine parser" do
   context "with just arguments" do
     before(:each) do
       @cmd = 'cp'
-      @args = []
+      @args = ['foo']
     end
 
     context "one argument" do
       before(:each) do
-        @args << 'foo'
+        @parsed_cmd = @parser.parse("#{@cmd} #{@args.join(' ')}")
+      end
+
+      it "parses the list of arguments" do
+        @parsed_cmd.argument_list.should == @args
+      end
+    end
+
+    context "two arguments" do
+      before(:each) do
+        @args << 'bar'
         @parsed_cmd = @parser.parse("#{@cmd} #{@args.join(' ')}")
       end
 
@@ -134,4 +144,54 @@ describe "The CommandLine parser" do
     end
   end
 
+  context "with arguments and options" do
+    before(:each) do
+      @cmd = 'cp'
+      @opts = ['r']
+      @args = ['foo', 'bar']
+    end
+
+    context "1 option followed by 2 arguments" do
+      before(:each) do
+        @parsed_cmd = @parser.parse("#{@cmd} -#{@opts} #{@args.join(' ')}")
+      end
+
+      it "parses the option" do
+        @parsed_cmd.option_list.should == @opts
+      end
+
+      it "parses the list of arguments" do
+        @parsed_cmd.argument_list.should == @args
+      end
+    end
+
+    context "2 arguments followed by 1 option" do
+      before(:each) do
+        @parsed_cmd = @parser.parse("#{@cmd} -#{@opts} #{@args.join(' ')}")
+      end
+
+      it "parses the option" do
+        @parsed_cmd.option_list.should == @opts
+      end
+
+      it "parses the list of arguments" do
+        @parsed_cmd.argument_list.should == @args
+      end
+    end
+
+    context "1 argument, 1 option, 1 argument" do
+      before(:each) do
+        @cmd << ' foo -r bar'
+        @parsed_cmd = @parser.parse(@cmd)
+      end
+
+      it "parses the option" do
+        @parsed_cmd.option_list.should == @opts
+      end
+
+      it "parses the list of arguments" do
+        @parsed_cmd.argument_list.should == @args
+      end
+    end
+  end
 end
