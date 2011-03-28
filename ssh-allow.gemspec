@@ -21,8 +21,10 @@ SSH key-authenticated remote SSH connection can run.)
   s.require_paths = ["lib"]
 
   s.add_dependency 'thor', '~> 0.14.6'
+  s.add_dependency 'polyglot', '~> 0.3.1'
+  s.add_dependency 'treetop', '~> 1.4.9'
 
   s.add_development_dependency 'bundler', '~> 1.0.10'
-  s.add_development_dependency 'rspec', '~> 2.3.0'
-  s.add_development_dependency 'aruba', '~> 0.3.2'
+  s.add_development_dependency 'rspec', '~> 2.5.0'
+  s.add_development_dependency 'aruba', '~> 0.3.5'
 end
