@@ -6,9 +6,27 @@ require 'command_line'
 
 module SSH ; module Allow
   class Command
-    def initialize(args)
-      
+    attr_reader :name, :options, :arguments
+
+    def initialize(cmd)
+      @cmd = cmd.to_s
+      @name = parsed.name.text_value
+      @options = parsed.option_list
+      @arguments = parsed.argument_list
     end
 
+    def to_s
+      @cmd
+    end
+
+    def run
+      system(@cmd)
+    end
+
+    private
+
+    def parsed
+      @parsed ||= CommandLineParser.new.parse(@cmd)
+    end
   end
 end ; end
