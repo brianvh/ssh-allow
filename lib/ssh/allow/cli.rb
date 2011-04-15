@@ -10,25 +10,24 @@ module SSH::Allow
     method_option :echo, :type => :boolean, :default => false, :aliases => '-e',
                   :banner => "Echo the SSH_REMOTE_COMMAND."
     def guard
-      rules.read(options[:rules])
-      puts ssh_cmd if options[:echo]
-      command = SSH::Allow.command(ssh_cmd)
-      command.allowed? ? command.run : fail(command.error)
+      rule_set.read(options[:rules])
+      puts command if options[:echo]
+      command.allow?(rule_set.rules) ? command.run : fail
     end
 
     private
 
-      def rules
-        SSH::Allow.rules
-      end
+    def rule_set
+      @rule_set ||= SSH::Allow::RuleSet.new
+    end
 
-      def fail(msg='ssh-allow: Something went wrong.')
-        raise Thor::Error, msg
-      end
+    def command
+      @command ||= SSH::Allow::Command.new(ENV['SSH_REMOTE_COMMAND'])
+    end
 
-      def ssh_cmd
-        @ssh_cmd ||= ENV['SSH_REMOTE_COMMAND']
-      end
+    def fail
+      raise "Remote Command Not Allowed: #{command}"
+    end
 
   end
 end

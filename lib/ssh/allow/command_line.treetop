@@ -1,0 +1,104 @@
+grammar CommandLine
+  rule command
+    name (delimited_option / delimited_argument)* {
+      def option_list
+        opts = self.elements[1].elements.inject([]) do |a, e|
+          a << e.opt_value
+        end
+        opts.compact
+      end
+
+      def argument_list
+        args = self.elements[1].elements.inject([]) do |a, e|
+          a << e.arg_value
+        end
+        args.compact
+      end
+    }
+  end
+
+  rule name
+    argument
+  end
+
+  rule delimited_option
+    ' ' option {
+      def opt_value
+        self.option.opt_value
+      end
+      
+      def arg_value
+        self.option.arg_value
+      end
+    }
+  end
+
+  rule delimited_argument
+    ' ' argument {
+      def opt_value
+        nil
+      end
+      
+      def arg_value
+        self.argument.text_value
+      end
+    }
+  end
+
+  rule option
+    (long_option / short_option)
+  end
+
+  rule long_option
+    '--' (opt_name '=' argument / opt_name) {
+      def opt_value
+        self.elements[1].respond_to?(:opt_name) ?
+          self.elements[1].opt_name.text_value : self.elements[1].text_value
+      end
+
+      def arg_value
+        self.elements[1].respond_to?(:opt_name) ?
+          self.elements[1].argument.text_value : nil
+      end
+    }
+  end
+
+  rule short_option
+    '-' (label_char '=' argument / opt_name) {
+    def opt_value
+      self.elements[1].respond_to?(:label_char) ?
+        self.elements[1].label_char.text_value : self.elements[1].text_value
+    end
+
+    def arg_value
+      self.elements[1].respond_to?(:label_char) ?
+        self.elements[1].argument.text_value : nil
+    end
+    }
+  end
+
+  rule argument
+    (quoted_chars / unquoted_chars) {
+      def arg_value
+        self.text_value
+      end
+    }
+  end
+
+  rule opt_name
+    label_char+
+  end
+
+  rule label_char
+    [a-zA-Z0-9]
+  end
+
+  rule quoted_chars
+    '"' (!'"' . / '\"')* '"'
+  end
+
+  rule unquoted_chars
+    (!' ' . / '\ ')+
+  end
+
+end
