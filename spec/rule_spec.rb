@@ -7,36 +7,74 @@ describe SSH::Allow::Rule do
       @cmd = "ls"
     end
 
-    context "without a block" do
+    context "with no options or arguments" do
       before(:each) do
         @rule = SSH::Allow::Rule.allow(@cmd)
       end
 
-      context "the rule options" do
-        it "returns :none" do
-          @rule.options.should == [:none]
-        end
+      it "returns [:none] for options" do
+        @rule.options.should == [:none]
+      end
+
+      it "match_command? matches 'ls'" do
+        @rule.should be_match_command(@cmd)
+      end
+
+      it "match_command? doesn't match 'ln'" do
+        @rule.should_not be_match_command('ln')
+      end
+
+      it "match_options? matches no options" do
+        @rule.should be_match_options([])
+      end
+
+      it "match_options? doesn't match a passed in option" do
+        @rule.should_not be_match_options(['foo'])
+      end
+
+      it "match_arguments? matches no arguments" do
+        @rule.should be_match_arguments([])
+      end
+
+      it "match_arguments? doesn't match a passed in argument" do
+        @rule.should_not be_match_arguments(['foo'])
       end
     end
 
-    context "with a valid block" do
+    context "with options and arguments, via a block" do
       before(:each) do
         @rule = SSH::Allow::Rule.allow(@cmd) do
-          opts "-ld"
-          args "/foo/bar/.*"
+          opts '-ld'
+          args '^\/foo\/bar\/.*'
         end
       end
 
-      context "the rule options" do
-        it "returns \"-ld\"" do
-          @rule.options.should == ["-ld"]
-        end
+      it "returns \"ld\" for the rule options" do
+        @rule.options.should == ['ld']
       end
 
-      context "the rule arguments" do
-        it "returns \"/foo/bar/.*\"" do
-          @rule.arguments.should == ["/foo/bar/.*"]
-        end
+      it "returns the correct pattern for the argument" do
+        @rule.arguments[0].should == Regexp.new('^\/foo\/bar\/.*')
+      end
+
+      it "match_options? matches the correct options" do
+        @rule.should be_match_options(['ld'])
+      end
+
+      it "match_options? doesn't match more than one option" do
+        @rule.should_not be_match_options(['ld', 'foo'])
+      end
+
+      it "match_arguments? matches an argument that starts with '/foo/bar/'" do
+        @rule.should be_match_arguments(['/foo/bar/*'])
+      end
+
+      it "match_arguments? doesn't match an argument that starts with '/foo/baz/'" do
+        @rule.should_not be_match_arguments(['/foo/baz/*'])
+      end
+
+      it "match_arguments? doesn't match more than one argument" do
+        @rule.should_not be_match_arguments(['/foo/bar/*', '/foo/baz/*'])
       end
     end
 
@@ -49,7 +87,7 @@ describe SSH::Allow::Rule do
       end
 
       it "returns false" do
-        @rule.should be_false
+        @rule.should be(false)
       end
     end
   end
