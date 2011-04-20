@@ -105,3 +105,47 @@ describe SSH::Allow::Rule do
     end
   end
 end
+
+describe SSH::Allow::Rule::Allow do
+  context "A Command for 'ls -ld /foo/bar/*'" do
+    before(:each) do
+      @cmd = mock(:command)
+      @cmd.should_receive(:name).once.and_return('ls')
+      @cmd.should_receive(:options).once.and_return(['ld'])
+      @cmd.should_receive(:arguments).once.and_return(['/foo/bar/*'])
+    end
+
+    context "matched against an 'ls' rule with no options or arguments" do
+      before(:each) do
+        @rule = SSH::Allow::Rule.allow('ls')
+        @match, @allow = @rule.match?(@cmd)
+      end
+
+      it "is not a match" do
+        @match.should be(false)
+      end
+
+      it "is not allowed" do
+        @allow.should be(false)
+      end
+    end
+
+    context "matched against an 'ls' rule with matching options and arguments" do
+      before(:each) do
+        @rule = SSH::Allow::Rule.allow('ls') do
+          opts '-ld'
+          args '^\/foo\/bar\/.*'
+        end
+        @match, @allow = @rule.match?(@cmd)
+      end
+
+      it "is a match" do
+        @match.should be(true)
+      end
+
+      it "is allowed" do
+        @allow.should be(true)
+      end
+    end
+  end
+end
