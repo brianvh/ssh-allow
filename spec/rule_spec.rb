@@ -122,11 +122,11 @@ describe SSH::Allow::Rule::Allow do
       end
 
       it "is not a match" do
-        @match.should be(false)
+        @match.should_not be(true)
       end
 
-      it "is not allowed" do
-        @allow.should be(false)
+      it "would not be allowed" do
+        @allow.should_not be(true)
       end
     end
 
@@ -143,8 +143,52 @@ describe SSH::Allow::Rule::Allow do
         @match.should be(true)
       end
 
-      it "is allowed" do
+      it "would be allowed" do
         @allow.should be(true)
+      end
+    end
+  end
+end
+
+describe SSH::Allow::Rule::Deny do
+  context "A Command for 'mv /foo/bar/file.txt /foo/baz/'" do
+    before(:each) do
+      @cmd = mock(:command)
+      @cmd.should_receive(:name).once.and_return('mv')
+      @cmd.should_receive(:options).once.and_return([])
+      @cmd.should_receive(:arguments).once.and_return(['/foo/bar/file.txt', '/foo/baz/'])
+    end
+
+    context "matched against an 'mv' rule with no options or arguments" do
+      before(:each) do
+        @rule = SSH::Allow::Rule.deny('mv')
+        @match, @allow = @rule.match?(@cmd)
+      end
+
+      it "is not a match" do
+        @match.should_not == true
+      end
+
+      it "would be allowed" do
+        @allow.should == true
+      end
+    end
+
+    context "matched against an 'mv' rule with matching options and arguments" do
+      before(:each) do
+        @rule = SSH::Allow::Rule.deny('mv') do
+          args '^\/foo\/bar\/.*'
+          args '^\/foo\/baz\/.*'
+        end
+        @match, @allow = @rule.match?(@cmd)
+      end
+
+      it "is a match" do
+        @match.should == true
+      end
+
+      it "would not be allowed" do
+        @allow.should_not == true
       end
     end
   end

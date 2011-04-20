@@ -84,7 +84,11 @@ module SSH ; module Allow
     end
 
     class Deny < Rule
-      
+      def match?(command)
+        match = [match_command?(command.name), match_options?(command.options),
+          match_arguments?(command.arguments)].inject(true) { |mem, var| var && mem }
+        return match, !match
+      end
     end
   end
 
