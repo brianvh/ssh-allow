@@ -36,4 +36,37 @@ describe SSH::Allow::Command do
     end
   end
 
+  describe "#allowed?" do
+    context "with 1 'allow' rule, each, for cp and mv commands" do
+      before(:each) do
+        @cp = mock(:cp_rule)
+        @mv = mock(:mv_rule)
+        @cp.should_receive(:match?).once.and_return([false, false])
+        @rules = [@cp, @mv]
+        cmd_text = 'mv /foo/bar /baz/bar'
+        @command = SSH::Allow::Command.new(cmd_text)
+      end
+
+      context "when the mv command matches" do
+        before(:each) do
+          @mv.should_receive(:match?).once.and_return([true, true])
+        end
+
+        it "returns true" do
+          @command.should be_allowed(@rules)
+        end
+      end
+
+      context "when the mv command doesn't match" do
+        before(:each) do
+          @mv.should_receive(:match?).once.and_return([false, false])
+        end
+
+        it "returns false" do
+          @command.should_not be_allowed(@rules)
+        end
+      end
+    end
+  end
+
 end

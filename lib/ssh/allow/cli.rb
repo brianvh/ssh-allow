@@ -12,7 +12,7 @@ module SSH::Allow
     def guard
       rule_set.read(options[:rules])
       puts command if options[:echo]
-      command.allow?(rule_set.rules) ? command.run : fail
+      command.allowed?(rule_set.rules) ? command.run : fail
     end
 
     private

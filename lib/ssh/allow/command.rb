@@ -23,6 +23,15 @@ module SSH ; module Allow
       system(@cmd)
     end
 
+    def allowed?(rules)
+      match, allow = false, false
+      rules.each do |rule|
+        match, allow = rule.match?(self)
+        break if match
+      end
+      allow
+    end
+
     private
 
     def parsed
