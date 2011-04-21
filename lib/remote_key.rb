@@ -1,3 +1,0 @@
-module RemoteKey
-  # Your code goes here...
-end

@@ -1,8 +1,8 @@
-# remote_key
+# ssh-allow
 
-A Ruby shell script (and library) for configuring commands to be allowed, or blocked, during a remote SSH shell session that has been authenticated via SSH key exchange.
+A Ruby shell script (and library) for setting up guards against remote SSH commands, for connections authenticated by SSH key exchange.
 
 ## Installation
 
-    $ sudo gem install remote_key
+    $ sudo gem install ssh-allow
 
