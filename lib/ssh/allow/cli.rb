@@ -26,7 +26,7 @@ module SSH::Allow
     end
 
     def fail
-      raise "Remote Command Not Allowed: #{command}"
+      raise Thor::Error, "Remote Command Not Allowed: #{command}"
     end
 
   end
