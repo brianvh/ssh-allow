@@ -4,9 +4,9 @@ A mini-DSL for specifying which remote SSH commands are allowed (or denied) duri
 
 ## Purpose
 
-Guarding against the SSH_REMOTE_COMMAND environment is fairly command and allowing/denying simple commands is easy to do with a simple bash shell. Unfortunately, if what you need to do is allow a very narrow set of non-trivial commands, where the various command-line options and arguments need to be specified, trying to accomplish this with a bash script quickly becomes arduous.
+Guarding against the SSH_ORIGINAL_COMMAND environment is fairly command and allowing/denying simple commands is easy to do with a simple bash shell. Unfortunately, if what you need to do is allow a very narrow set of non-trivial commands, where the various command-line options and arguments need to be specified, trying to accomplish this with a bash script quickly becomes arduous.
 
-To try and solve this problem, I developed an extremely simple _DSL_, which is really just some stripped down ruby code, that would make specifying almost any range of commands, with almost any range of options and/or arguments, a straightforward problem. Those **rules** needed a specialized command-line binary to both process them and compare the allowed (or denied) commands against ENV['SSH_REMOTE_COMMAND'].
+To try and solve this problem, I developed an extremely simple _DSL_, which is really just some stripped down ruby code, that would make specifying almost any range of commands, with almost any range of options and/or arguments, a straightforward problem. Those **rules** needed a specialized command-line binary to both process them and compare the allowed (or denied) commands against ENV['SSH_ORIGINAL_COMMAND'].
 
 That's ssh-allow.
 
