@@ -1,6 +1,4 @@
-require 'singleton'
-
-module SSH::Allow
+module SSH ; module Allow
 
   class RuleSet
     attr_reader :rules
@@ -24,21 +22,17 @@ module SSH::Allow
 
     private
 
-      def push(rule)
-        rule ? @rules.push(rule) : false
-      end
+    def push(rule)
+      rule ? @rules.push(rule) : false
+    end
 
-      def get_rule(type, cmd, block)
-        SSH::Allow::Rule.send(type, cmd, &block)
-      end
+    def get_rule(type, cmd, block)
+      SSH::Allow::Rule.send(type, cmd, &block)
+    end
 
-      def read_rules(path_to_rules)
-        IO.read(path_to_rules)
-      end
+    def read_rules(path_to_rules)
+      IO.read(path_to_rules)
+    end
   end
 
-  class RuleSet::Single < RuleSet
-    include Singleton
-  end
-
-end
+end ; end

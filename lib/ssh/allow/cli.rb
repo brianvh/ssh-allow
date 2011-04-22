@@ -1,6 +1,6 @@
 require 'thor'
 
-module SSH::Allow
+module SSH ; module Allow
   class CLI < Thor
 
     desc  "guard --rules | -r=<file> [--echo | -e]",
@@ -30,4 +30,4 @@ module SSH::Allow
     end
 
   end
-end
+end ; end
