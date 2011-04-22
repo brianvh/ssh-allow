@@ -8,10 +8,10 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Brian V. Hughes"]
   s.email       = ["brianvh@dartmouth.edu"]
-  s.homepage    = ""
+  s.homepage    = %(https://github.com/brianvh/ssh-allow/)
   s.summary     = %(#{s.name}-#{s.version})
-  s.description = %(Process a YAML file that configures allowed commands an 
-SSH key-authenticated remote SSH connection can run.)
+  s.description = %(Command-line binary and mini-DSL for configuring the commands an 
+SSH key-authenticated remote SSH connection is allowed to run.)
 
   s.rubyforge_project = "ssh-allow"
 
