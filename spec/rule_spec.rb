@@ -7,7 +7,7 @@ describe SSH::Allow::Rule do
       @cmd = "ls"
     end
 
-    context "with no options or arguments" do
+    context "when specifying no options or arguments" do
       before(:each) do
         @rule = SSH::Allow::Rule.allow(@cmd)
       end
@@ -41,7 +41,31 @@ describe SSH::Allow::Rule do
       end
     end
 
-    context "with options and arguments, via a block" do
+    context "when specifying :any for options and arguments " do
+      before(:each) do
+        @rule = SSH::Allow::Rule.allow(@cmd)
+        @rule.opts(:any)
+        @rule.args(:any)
+      end
+
+      it "match_options? matches no options" do
+        @rule.should be_match_options([])
+      end
+
+      it "match_options? matches any number of options" do
+        @rule.should be_match_options(['foo', 'bar', 'baz'])
+      end
+
+      it "match_arguments? matches no arguments" do
+        @rule.should be_match_arguments([])
+      end
+
+      it "match_arguments? matches any number of arguments" do
+        @rule.should be_match_arguments(['foo', 'bar', :baz])
+      end
+    end
+
+    context "when specifying strings for options and arguments, via a block" do
       before(:each) do
         @rule = SSH::Allow::Rule.allow(@cmd) do
           opts '-ld'
@@ -78,7 +102,7 @@ describe SSH::Allow::Rule do
       end
     end
 
-    context "with an invalid block" do
+    context "when sending an invalid block" do
       before(:each) do
         @rule = SSH::Allow::Rule.allow(@cmd) do
           opts "-ld"
