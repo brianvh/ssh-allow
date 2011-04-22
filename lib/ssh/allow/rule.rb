@@ -10,11 +10,13 @@ module SSH ; module Allow
     end
 
     def opts(opt_text)
-      push(:options, opt_text.gsub(/^--?/, ''))
+      opt_text.gsub!(/^--?/, '') if opt_text.is_a?(String)
+      push(:options, opt_text)
     end
 
     def args(arg_text)
-      push(:arguments, Regexp.new(arg_text))
+      arg_text = Regexp.new(arg_text) if arg_text.is_a?(String)
+      push(:arguments, arg_text)
     end
 
     def match_command?(name)
